@@ -1,0 +1,20 @@
+{
+  "name": "472-s-comscicurriculumproject-6510450208",
+  "version": "1.0.0",
+  "description": "This project is about checking the criteria of students to confirm graduation. The check will include \r 1. academic transcripts\r 2. academic debt payment forms \r 3. graduation applications\r 4. activity sheets (optional).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kktopkk/472-S-ComSciCurriculumProject-6510450208.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kktopkk/472-S-ComSciCurriculumProject-6510450208/issues"
+  },
+  "homepage": "https://github.com/kktopkk/472-S-ComSciCurriculumProject-6510450208#readme"
+}
