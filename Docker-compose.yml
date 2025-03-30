@@ -1,4 +1,24 @@
 services:
+  frontend:
+    build: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - frontend
+
+  backend:
+    build: backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - minio
+    networks:
+      - backend
+      - frontend
+
   minio:
     container_name: cs_curriculum_minio
     image: minio/minio
@@ -10,6 +30,9 @@ services:
     volumes:
       - minio_data:/data
     command: server /data --console-address ":9001"
+    networks:
+      - backend
+
   db:
     container_name: cs_curriculum
     image: mysql:latest
@@ -20,6 +43,9 @@ services:
       - "3306:3306"
     volumes:
       - csc_db_data:/var/lib/mysql
+    networks:
+      - backend
+
   phpmyadmin:
     container_name: cs_curriculum_phpmyadmin
     image: phpmyadmin/phpmyadmin:latest
@@ -31,6 +57,13 @@ services:
       - "8080:80"
     depends_on:
       - db
+
+networks:
+  backend:
+    driver: bridge
+
+  frontend:
+    driver: bridge
 
 volumes:
   csc_db_data:

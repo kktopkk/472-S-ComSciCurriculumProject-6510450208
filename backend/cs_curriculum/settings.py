@@ -63,13 +63,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # อนุญาตเฉพาะ frontend ที่รันอยู่
+    "http://localhost:5173",  # For development (Vite or similar tools)
+    "http://localhost",       # For production (served via Nginx)
+    "http://localhost:80",    # Explicitly allow port 80
 ]
 
 CORS_ALLOW_CREDENTIALS = True

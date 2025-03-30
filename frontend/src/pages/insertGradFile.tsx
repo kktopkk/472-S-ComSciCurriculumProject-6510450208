@@ -6,7 +6,7 @@ import UploadFileButton from "../components/uploadfile-button";
 import ErrorMessage from "../components/ErrorMessage";
 import SuccessMessage from "../components/SuccessMessage";
 import ConfirmPopup from "../components/ConfirmPopup";
-import "../styles/insertGradFile.css";
+import "../styles/InsertGradFile.css";
 import axios from "axios";
 
 const InsertGradFile: React.FC = () => {

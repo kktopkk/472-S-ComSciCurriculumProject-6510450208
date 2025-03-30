@@ -53,9 +53,12 @@ def resetForm(uid: uuid.UUID) :
     vr.delete()
     
     form.form_status = Form.FormStatus.DRAFT
-    form.form_type = Form.FormType.GRADUATION_CHECK
     form.save()
     
     # TODO: delete files
-    delete_from_minio(str(form.form_id))
+    try :
+        delete_from_minio(str(form.form_id))
+    except Exception as e :
+        print(e)
+        
     return 'Delete success'
