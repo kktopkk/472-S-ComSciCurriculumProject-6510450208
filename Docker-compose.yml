@@ -1,5 +1,4 @@
 services:
-
   frontend:
     build: frontend
     ports:
@@ -33,6 +32,7 @@ services:
     command: server /data --console-address ":9001"
     networks:
       - backend
+
   db:
     container_name: cs_curriculum
     image: mysql:latest
@@ -40,11 +40,12 @@ services:
       - MYSQL_ROOT_PASSWORD=1234
       - MYSQL_DATABASE=cs_curriculum
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - csc_db_data:/var/lib/mysql
     networks:
       - backend
+
   phpmyadmin:
     container_name: cs_curriculum_phpmyadmin
     image: phpmyadmin/phpmyadmin:latest
@@ -60,6 +61,7 @@ services:
 networks:
   backend:
     driver: bridge
+
   frontend:
     driver: bridge
 
