@@ -2,22 +2,37 @@
 FROM node:18 AS builder
 
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
 
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Set environment variables if needed
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
+# Debug environment variable
+RUN echo "VITE_API_URL=$VITE_API_URL"
+
+# Ensure dependencies are installed correctly
+RUN npm ci
+
+# Build the application
+RUN npm run build || { echo "Build failed. Check logs above."; exit 1; }
 
 # deploy frontend
-# Use Nginx to serve the frontend
 FROM nginx:latest
 
 # Copy built frontend files to Nginx web root
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY --from=builder /app/src/assets /usr/share/nginx/html/assets
 
-# Copy custom Nginx config
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
-
+# Expose port 80
 EXPOSE 80
+
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
