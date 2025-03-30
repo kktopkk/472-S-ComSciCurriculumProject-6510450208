@@ -1,0 +1,62 @@
+name: CD-github-action
+
+on: 
+  push: 
+    branches: 
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    env:
+      FRONTEND_APP_NAME: "gitops-frontend"
+      BACKEND_APP_NAME: "gitops-backend"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Generate tag
+        run: |-
+          TAG_NAME="v1.0.${{ github.run_number }}"
+
+          echo "VERSION='${TAG_NAME}'" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${VERSION}
+          name: "Release ${{ github.ref_name }}"
+          body: "🚀 New release ${{ github.ref_name }} is live!"
+          draft: false  # Set true to create as draft
+          prerelease: false  # Set true for pre-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push container frontend
+        working-directory: ./frontend
+        run: |-
+          VERSION="v1.0.4"
+          VERSION_NO_QUOTES="${VERSION//\'/}"  # Remove single quotes
+          
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_APP_NAME }}:${VERSION_NO_QUOTES}"
+          
+          docker build -f ./dockerfile -t "${IMAGE_NAME}" .
+          docker push "${IMAGE_NAME}"
+          
+      - name: Build and push container backend
+        working-directory: ./backend
+        run: |-
+          VERSION="v1.0.4"
+          VERSION_NO_QUOTES="${VERSION//\'/}"  # Remove single quotes
+
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_APP_NAME }}:${VERSION_NO_QUOTES}"
+
+          docker build -f ./dockerfile -t "${IMAGE_NAME}" .
+          docker push "${IMAGE_NAME}"
